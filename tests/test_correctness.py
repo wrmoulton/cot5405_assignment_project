@@ -14,6 +14,60 @@ from src.algorithms.hungarian import hungarian_assignment
 from src.utils.generator import generate_cost_matrix
 
 
+def test_known_baselines():
+    """Both algorithms must match hand-verified optimal costs on known small inputs."""
+
+    baselines = [
+        # (cost_matrix, expected_optimal_cost)
+
+        # Simple 2x2 — only two possible assignments
+        # Assignment A: (0,0)+(1,1) = 1+8 = 9
+        # Assignment B: (0,1)+(1,0) = 2+5 = 7, optimal
+        ([[1, 2],
+          [5, 8]], 7),
+
+        # 3x3 — manually verified
+        # Optimal: (0,0)+(1,2)+(2,1) = 1+3+2 = 6
+        ([[1, 4, 6],
+          [7, 3, 5],  
+          [8, 2, 9]], 8),
+
+        # 3x3 with uniform costs — any assignment costs 3
+        ([[1, 1, 1],
+          [1, 1, 1],
+          [1, 1, 1]], 3),
+
+        # 3x3 diagonal — cost = 1+1+1 = 3
+        ([[1, 9, 9],
+          [9, 1, 9],
+          [9, 9, 1]], 3),
+
+        # 4x4 — manually verified
+        # Optimal: (0,1)+(1,0)+(2,3)+(3,2) = 2+3+1+4 = 10
+        ([[5, 2, 8, 7],
+          [3, 9, 6, 4],
+          [7, 6, 8, 1],
+          [9, 5, 4, 8]], 10),
+    ]
+
+    for i, (matrix, expected_cost) in enumerate(baselines):
+        n = len(matrix)
+
+        # Hungarian must match exactly
+        h_assignment, h_cost = hungarian_assignment(matrix)
+        assert is_valid_assignment(h_assignment, n), \
+            f"Hungarian invalid assignment on baseline {i}"
+        assert math.isclose(h_cost, expected_cost), \
+            f"Hungarian wrong cost on baseline {i}: got {h_cost}, expected {expected_cost}"
+
+        # Greedy must be valid and >= optimal
+        g_assignment, g_cost = greedy_assignment(matrix)
+        assert is_valid_assignment(g_assignment, n), \
+            f"Greedy invalid assignment on baseline {i}"
+        assert g_cost >= expected_cost - 1e-9, \
+            f"Greedy beat optimal on baseline {i}: got {g_cost}, expected >= {expected_cost}"
+        
+
 def brute_force_assignment(cost_matrix):
     """Check all n! permutations and return the guaranteed optimal assignment."""
     n = len(cost_matrix)
@@ -114,6 +168,7 @@ def test_greedy_can_be_suboptimal():
 
 
 if __name__ == "__main__":
+    test_known_baselines()
     test_hungarian_matches_bruteforce()
     test_empty_matrix()
     test_non_square_matrix_raises()
