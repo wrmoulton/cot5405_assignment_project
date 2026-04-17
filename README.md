@@ -1,6 +1,6 @@
-# COT 5405 Final Project
+# COT 5405 Programming Project
 
-## Topic
+## Main Idea
 Empirical comparison of two algorithms for the Assignment Problem (minimum-cost bipartite matching):
 1. A greedy heuristic
 2. The Hungarian algorithm
@@ -11,7 +11,6 @@ cot5405_assignment_project/
 ├── README.md
 ├── requirements.txt
 ├── .gitignore
-├── report_outline.md
 ├── src/
 │   ├── algorithms/
 │   │   ├── greedy.py
@@ -50,7 +49,7 @@ This implementation uses the standard primal-dual / potential-based Hungarian me
 
 It produces an optimal assignment and is the benchmark algorithm for this project.
 
-## Suggested Experimental Design
+## Experimental Design
 
 ### Inputs
 Generate random `n x n` integer cost matrices.
@@ -59,10 +58,10 @@ Generate random `n x n` integer cost matrices.
 - Fix random seeds for reproducibility
 
 ### Recommended sizes
-Start with:
+Started with:
 - `n = 10, 20, 30, ..., 200`
 
-If runtime is still reasonable, extend Hungarian to:
+Extend Hungarian to:
 - `n = 250, 300, 350, 400`
 
 ### Trials
@@ -92,7 +91,7 @@ Also record:
 - Plot `T(n)/(n^2 log n)` for greedy
 - Plot `T(n)/n^3` for Hungarian
 
-If the theoretical models, these normalized curves should become relatively stable for larger `n`.
+These normalized curves should become relatively stable for larger `n`.
 
 ### Graph 3: Solution Quality Comparison
 - X-axis: problem size `n`
